@@ -6,52 +6,45 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+// Get postmeta data
+$primary_type = get_post_meta( $post->ID, 'primary_type', true );
+$secondary_type = get_post_meta( $post->ID, 'secondary_type', true );
+$photo_url = get_the_post_thumbnail_url( $post->ID, 'large' );
+$pokemon_description = get_post_meta( $post->ID, 'pokemon_description', true );
+$pokemon_weight = get_post_meta( $post->ID, 'pokemon_weight', true );
+$pokedex_number_old = get_post_meta( $post->ID, 'pokedex_number_oldest', true );
+$pokedex_number_new = get_post_meta( $post->ID, 'pokedex_number_newest', true );
+$attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
+                    
 ?>
 
 <article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
 
-	<header class="entry-header">
 
+	<header class="entry-header" pokemon-type="<?php echo $primary_type; ?>">
 		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 
-		<div class="entry-meta">
+        <div class="row">
+            <div class="col-12 col-md-2  d-flex justify-content-center">
+                <?php echo get_the_post_thumbnail( $post->ID, 'large' ); ?>
+            </div>
 
-			<?php understrap_posted_on(); ?>
-
-		</div><!-- .entry-meta -->`
-
+            <div class="col-12 col-md  d-flex align-items-center">
+                <div class="pokemon-type">
+                    <a pokemon-type="<?php echo $primary_type; ?>" ><?php echo $primary_type; ?></a>
+                    <?php if ( $secondary_type ) { ?>
+                        <a pokemon-type="<?php echo $secondary_type; ?>"><?php echo $secondary_type; ?></a>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
 	</header><!-- .entry-header -->
-    <?php echo get_stylesheet_directory_uri() . "/style.css"; ?>
 
-	<?php echo get_the_post_thumbnail( $post->ID, 'large' ); ?>
-
-	<div class="entry-content">
-
-		<?php
-        // Get postmeta data
-        $photo_url = get_the_post_thumbnail_url( $post->ID, 'large' );
-        $pokemon_description = get_post_meta( $post->ID, 'pokemon_description', true );
-        $primary_type = get_post_meta( $post->ID, 'primary_type', true );
-        $secondary_type = get_post_meta( $post->ID, 'secondary_type', true );
-        $pokemon_weight = get_post_meta( $post->ID, 'pokemon_weight', true );
-        $pokedex_number_old = get_post_meta( $post->ID, 'pokedex_number_oldest', true );
-        $pokedex_number_new = get_post_meta( $post->ID, 'pokedex_number_newest', true );
-        $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
-        
-        // Display the data
-        ?>
-
+	<div class="entry-content mt-5">
         <div class="pokemon-description">
             <h2>Description</h2>
-            <p><?php echo $pokemon_description; ?></p>
-        </div>
-
-        <div class="pokemon-type">
-            <h2>Type</h2>
-            <p><?php echo $primary_type; ?></p>
-            <?php if ( $secondary_type ) { ?>
-                <p><?php echo $secondary_type; ?></p>
-            <?php } ?>
+            <p><?php the_content(); ?></p>
         </div>
 
         <div class="pokemon-weight">
@@ -67,7 +60,7 @@ defined( 'ABSPATH' ) || exit;
 
         <div class="pokemon-attacks">
             <h2>Attacks</h2>
-            <table>
+            <table class="attacks-table">
                 <tr>
                     <th>Attack Name</th>
                     <th>Attack description</th>

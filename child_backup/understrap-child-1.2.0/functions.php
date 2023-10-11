@@ -91,16 +91,6 @@ add_action( 'customize_controls_enqueue_scripts', 'understrap_child_customize_co
 # FUNCTIONS FOR POKEMON SITE
 
 /**
- * lOAD Load child CSS
- */
-function load_child_css() {
-	wp_enqueue_style( 'child-understrap-styles',   "/style.css", array(), '1.0.0' );
-}
-add_action( 'wp_enqueue_scripts', 'load_child_css' );
-
-
-
-/**
  * Custom Pokemon post type
  */
 function pokemon_post_type() {

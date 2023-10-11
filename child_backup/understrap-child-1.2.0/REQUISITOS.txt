@@ -1,4 +1,4 @@
-1. Un nuevo tipo de post "Pokemon"
+## 1. Un nuevo tipo de post "Pokemon"
     - Foto
     - Nombre
     - Descripcion
@@ -7,11 +7,11 @@
     - No Pokedex mas antiguo y mas nuevo
     - Ataques + descripcion corta 
 
-2. Generar 3 pokemon nuevos
+## 2. Generar 3 pokemon nuevos
     - Nueva pagina en el admin
     - Boton de generar y una vez se ha generado: guardar o no
 
-3. Paginas
+## 3. Paginas
     - Template para post Pokemon
     - Pagina con todos los pokemon y filtros de tipo
     - Random pokemon (redirect)
@@ -20,9 +20,17 @@
         1: Pokemon ordenado por No reciente
         2: Todos los datos como JSON
 
-4. Integracion DAPI (https://digimon-api.com/)
+4. Pagina filtro por tipos
 
-5. Integracion Redis
+## 5. Pagina random pokemon
+
+6. Pagina generate pokemon
+
+7. API WP 2 endpoints
+
+8. Integracion DAPI (https://digimon-api.com/)
+
+9. Integracion Redis
 
 
 =======================================================================
