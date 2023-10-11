@@ -1,4 +1,8 @@
 <?php
+require_once(ABSPATH . 'wp-admin/includes/media.php');
+require_once(ABSPATH . 'wp-admin/includes/file.php');
+require_once(ABSPATH . 'wp-admin/includes/image.php');
+
 /**
  * Understrap Child Theme functions and definitions
  *
@@ -88,7 +92,11 @@ function understrap_child_customize_controls_js() {
 add_action( 'customize_controls_enqueue_scripts', 'understrap_child_customize_controls_js' );
 
 
-# FUNCTIONS FOR POKEMON SITE
+
+
+##############################
+# FUNCTIONS FOR POKEMON SITE #
+##############################
 
 /**
  * Custom Pokemon post type
@@ -468,8 +476,8 @@ function download_random_pokemon_data() {
 	$api_body = wp_remote_retrieve_body( $api_response );
 	$api_data = json_decode( $api_body );
 
-	// Save to post meta
-	save_pokemon_data( $api_data );
+	// Save to post meta and return post URL
+	return get_permalink( save_pokemon_data( $api_data ) );
 }
 
 
@@ -568,6 +576,8 @@ function save_pokemon_data( $api_data ) {
 
 	// API ID
 	update_post_meta( $post_id, 'pokemon_api_id', $api_data->id );
+
+	return $post_id;
 }
 
 

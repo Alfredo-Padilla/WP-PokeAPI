@@ -52,7 +52,7 @@ body.admin-bar #wrapper-navbar {
 }
 
 /* MAIN CONTENT */
-#page > .wrapper {
+#page > .wrapper:first-of-type {
     padding-top: 83px;
 }
 
@@ -137,9 +137,13 @@ a[pokemon-type] {
 .attacks-table {
     width: 100%;
     border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
-.attacks-table tr:first-child {
-    background-color: rgb(200, 200, 200);
+.attacks-table th {
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #000;
+    color: #fff;
 }
 .attacks-table tr {
     background-color: rgb(230, 230, 230);
@@ -147,18 +151,15 @@ a[pokemon-type] {
 .attacks-table tr:nth-child(even) {
     background-color: rgb(240, 240, 240);
 }
-.attacks-table th {
-    text-align: center;
-    font-weight: bold;
-    text-transform: uppercase;
-}
 
 .attacks-table :is(td, th) {
-    border: 1px solid #000;
     padding: 5px 10px;
 }
 .attacks-table :is(td, th):first-child {
     width: 25%;
+}
+.attacks-table td:first-child {
+    border-right: 3px solid #000;
 }
 
 

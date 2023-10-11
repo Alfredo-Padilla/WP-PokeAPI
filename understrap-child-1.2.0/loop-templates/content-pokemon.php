@@ -20,8 +20,6 @@ $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
 ?>
 
 <article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
-
-
 	<header class="entry-header" pokemon-type="<?php echo $primary_type; ?>">
 		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 
@@ -43,23 +41,20 @@ $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
 
 	<div class="entry-content mt-5">
         <div class="pokemon-description">
-            <h2>Description</h2>
+            <h2>Pokemon Description</h2>
             <p><?php the_content(); ?></p>
         </div>
 
-        <div class="pokemon-weight">
-            <h2>Weight</h2>
-            <p><?php echo $pokemon_weight; ?></p>
-        </div>
-
-        <div class="pokemon-pokedex-number">
-            <h2>Pokedex Number</h2>
-            <p>Oldest Pokedex Number: <?php echo $pokedex_number_old; ?></p>
-            <p>Newest Pokedex Number: <?php echo $pokedex_number_new; ?></p>
+        <div class="pokemon-data">
+            <h2>Pokemon Data</h2>
+            <p>
+                Weight: <?php echo $pokemon_weight; ?>kg<br />
+                Oldest Pokedex Number: <?php echo $pokedex_number_old; ?><br />
+                Newest Pokedex Number: <?php echo $pokedex_number_new; ?>
+            </p>
         </div>
 
         <div class="pokemon-attacks">
-            <h2>Attacks</h2>
             <table class="attacks-table">
                 <tr>
                     <th>Attack Name</th>
@@ -68,7 +63,7 @@ $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
 
                 <?php foreach ( $attacks as $attack ) { ?>
                     <tr>
-                        <td><?php echo $attack["name"]; ?></td>
+                        <td><?php echo ucwords($attack["name"]); ?></td>
                         <td><?php echo $attack["description"]; ?></td>
                     </tr>
                 <?php } ?>

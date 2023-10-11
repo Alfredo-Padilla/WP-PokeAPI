@@ -24,7 +24,7 @@
 
 ## 5. Pagina random pokemon
 
-6. Pagina generate pokemon
+## 6. Pagina generate pokemon
 
 7. API WP 2 endpoints
 
