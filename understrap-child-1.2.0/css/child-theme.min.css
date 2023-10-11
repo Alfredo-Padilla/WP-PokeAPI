@@ -43,6 +43,7 @@
     left: 0;
     right: 0;
     margin: 0 auto;
+    z-index: 100;
 }
 body.admin-bar #wrapper-navbar {
     top: 46px;
@@ -168,17 +169,27 @@ a[pokemon-type] {
     margin-top: 15px;
 }
 .nav-previous,
-.nav-next {
+.nav-next,
+.page-numbers {
     padding: 10px 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     background-color: rgba(0, 0, 0, 0.75);
 
 }
-:is(.nav-previous, .nav-next) a {
+:is(.nav-previous, .nav-next) a,
+.page-numbers  {
     color: #fff !important;
     text-decoration: none;
     text-transform: uppercase;
 
+}
+
+.card {
+    min-height: 325px;
+}
+.card,
+.card * {
+    border-radius: 0 !important;
 }
 
 @media (max-width: 1000px) {

@@ -1,3 +1,17 @@
+TAREAS PENDIENTES
+    - Funcionalidad filtros
+    - Estilos filtros
+    - Acabar los bloques del editor
+    
+
+
+
+
+=======================================================================
+
+
+
+
 ## 1. Un nuevo tipo de post "Pokemon"
     - Foto
     - Nombre

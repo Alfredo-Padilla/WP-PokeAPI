@@ -97,6 +97,37 @@ add_action( 'customize_controls_enqueue_scripts', 'understrap_child_customize_co
 ##############################
 # FUNCTIONS FOR POKEMON SITE #
 ##############################
+/**
+ * Pokemon type taxonomy
+ */
+function pokemon_type_taxonomy() {
+	$labels = array(
+		'name' => __( 'Pokemon Types', 'understrap-child' ),
+		'singular_name' => __( 'Pokemon Type', 'understrap-child' ),
+		'search_items' => __( 'Search Pokemon Types', 'understrap-child' ),
+		'all_items' => __( 'All Pokemon Types', 'understrap-child' ),
+		'parent_item' => __( 'Parent Pokemon Type', 'understrap-child' ),
+		'parent_item_colon' => __( 'Parent Pokemon Type:', 'understrap-child' ),
+		'edit_item' => __( 'Edit Pokemon Type', 'understrap-child' ),
+		'update_item' => __( 'Update Pokemon Type', 'understrap-child' ),
+		'add_new_item' => __( 'Add New Pokemon Type', 'understrap-child' ),
+		'new_item_name' => __( 'New Pokemon Type Name', 'understrap-child' ),
+		'menu_name' => __( 'Pokemon Types', 'understrap-child' ),
+	);
+
+	$args = array(
+		'labels' => $labels,
+		'hierarchical' => true,
+		'show_ui' => true,
+		'show_in_rest' => true,
+		'show_admin_column' => true,
+		'query_var' => true,
+		'rewrite' => array( 'slug' => 'pokemon_type' ),
+	);
+
+	register_taxonomy( 'pokemon_type', array( 'pokemon' ), $args );
+}
+add_action( 'init', 'pokemon_type_taxonomy' );
 
 /**
  * Custom Pokemon post type
@@ -119,20 +150,23 @@ function pokemon_post_type() {
 
 	$args = array(
 		'labels' => $labels,
+		'hierarchical' => false,
 		'description' => __( 'Pokemon', 'understrap-child' ),
+		'supports' => array( 'title', 'editor', 'thumbnail' ),
+		'taxonomies' => array( 'pokemon_type' ),
 		'public' => true,
-		'publicly_queryable' => true,
-		'has_archive' => true,
-		'menu_icon' => 'dashicons-admin-page',
 		'show_ui' => true,
 		'show_in_rest' => true,
+		'menu_position' => 5,
+		'menu_icon' => 'dashicons-admin-site',
+		'show_in_nav_menus' => true,
+		'publicly_queryable' => true,
+		'exclude_from_search' => false,
+		'rewrite' => array( 'slug' => 'pokemon', 'with_front' => false ),
+		'has_archive' => 'pokemon',
 		'query_var' => true,
-		'rewrite' => array( 'slug' => 'pokemon' ),
-		'capability_type' => 'post',
-		'hierarchical' => false,
-		'menu_position' => 20,
-		'taxonomies' => array( 'category' ),
-		'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'custom-fields' ),
+		'can_export' => true,
+		'delete_with_user' => false,
 	);
 
 	register_post_type( 'pokemon', $args );
@@ -156,13 +190,11 @@ add_action( 'add_meta_boxes', 'pokemon_add_custom_meta_boxes' );
 
 
 
+
 /**
  * Show fields in editor for Custom Pokemon post type
  */
 function pokemon_show_custom_meta_box() {
-	// Types
-	pokemon_types_meta_box();
-
 	// Weight
 	pokemon_weight_meta_box();
 
@@ -178,36 +210,6 @@ function pokemon_show_custom_meta_box() {
 	// Save button
 	?>
 	<input type="hidden" name="pokemon_meta_box_nonce" value="<?php echo wp_create_nonce( basename( __FILE__ ) ); ?>">
-	<?php
-
-
-}
-
-/**
- * Types meta box
- */
-function pokemon_types_meta_box() {
-	global $post;
-	$primary_type = get_post_meta( $post->ID, 'primary_type', true );
-	$secondary_type = get_post_meta( $post->ID, 'secondary_type', true );
-
-	wp_nonce_field( basename( __FILE__ ), 'pokemon_types_nonce' );
-
-	?>
-	<table id="pokemon_types" class="table">
-		<thead>
-			<tr>
-				<th>Primary Type</th>
-				<th>Secondary Type</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><input type="text" name="pokemon_types[primary_type]" id="pokemon_types[primary_type]" class="regular-text" value="<?php echo $primary_type; ?>"></td>
-				<td><input type="text" name="pokemon_types[secondary_type]" id="pokemon_types[secondary_type]" class="regular-text" value="<?php echo $secondary_type; ?>"></td>
-			</tr>
-		</tbody>
-	</table>
 	<?php
 }
 
@@ -397,49 +399,6 @@ function pokemon_save_custom_meta_box( $post_id ) {
 add_action( 'save_post', 'pokemon_save_custom_meta_box' );
 
 
-/**
- * New admin page to manage Pokemon data downloads
- */
-function pokemon_admin_page() {
-	add_menu_page(
-		'Pokemon Data',
-		'Pokemon Data',
-		'manage_options',
-		'pokemon-data',
-		'pokemon_data_page',
-		'dashicons-admin-page',
-		20
-	);
-}
-add_action( 'admin_menu', 'pokemon_admin_page' );
-
-
-
-/**
- * Callback function for the admin page
- */
-function pokemon_data_page() {
-	// Check if the user has the right permissions
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
-
-	// Button to manually update pokemon data
-	?> <h1>Pokemon Data</h1> <?php
-	?> <p>Click the button below to download the latest Pokemon data from PokeAPI.</p> <?php
-	?> <p><a href="<?php echo admin_url( 'admin.php?page=pokemon-data&download=true' ); ?>" class="button button-primary">Download Pokemon Data</a></p> <?php
-
-	// Check if the download button was clicked
-	if ( isset( $_GET['download'] ) ) {
-		// Download the data
-		download_random_pokemon_data();
-
-		// Show a success message
-		?> <p>Pokemon data has finished downloading.</p> <?php
-	}
-}
-
-
 
 /**
  * Download Pokemon data frokm PokeAPI
@@ -501,7 +460,6 @@ function save_pokemon_data( $api_data ) {
 	$photo_id = media_sideload_image( $photo_url, $post_id, $api_data->name, 'id' );
 	set_post_thumbnail( $post_id, $photo_id );
 
-
 	// Pokemon description
 	$description_url = $api_data->species->url;
 	$description_response = wp_remote_get( $description_url );
@@ -521,16 +479,24 @@ function save_pokemon_data( $api_data ) {
 	);
 	wp_update_post( $my_post );
 
-
-	// Primary and secondary type of pokemon
+	// Primary and secondary type of pokemon as taxonomy
 	$primary_type = $api_data->types[0]->type->name;
-	update_post_meta( $post_id, 'primary_type', $primary_type );
 
-	if ( count( $api_data->types ) > 1 ) {
+	// Create a new term if it doesn't exist
+	/* if ( ! term_exists( $primary_type, 'pokemon_type' ) ) {
+		wp_insert_term( $primary_type, 'pokemon_type' );
+	} */
+	wp_set_object_terms( $post_id, $primary_type, 'pokemon_type', true );
+
+	if ( isset( $api_data->types[1] ) ) {
 		$secondary_type = $api_data->types[1]->type->name;
-		update_post_meta( $post_id, 'secondary_type', $secondary_type );
+		
+		// Create a new term if it doesn't exist
+		/* if ( ! term_exists( $secondary_type, 'pokemon_type' ) ) {
+			wp_insert_term( $secondary_type, 'pokemon_type' );
+		} */
 	}
-
+	wp_set_object_terms( $post_id, $secondary_type, 'pokemon_type', true );
 
 	// Pokemon weight is saved in hectograms: https://github.com/PokeAPI/pokeapi.co/pull/20
 	// We convert to kilograms
