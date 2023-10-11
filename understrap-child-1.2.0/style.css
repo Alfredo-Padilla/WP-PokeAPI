@@ -12,13 +12,3 @@
  Tags: one-column, custom-menu, featured-images, theme-options, translation-ready
  GitHub Theme URI: understrap/understrap-child
 */
-
-* {
-    color: red !important;
-}
-
-/* MAIN HEADER */
-#wrapper-navbar {
-    margin: 10px;
-    color: red;
-}
