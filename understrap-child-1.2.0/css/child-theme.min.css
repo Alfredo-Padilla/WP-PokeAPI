@@ -225,11 +225,15 @@ a[pokemon-type]:hover {
 }
 .nav-previous,
 .nav-next,
-.page-numbers {
-    padding: 10px 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    background-color: var(--almost-black);
+.page-numbers,
+#show-oldest {
     color: var(--almost-white);
+    text-transform: uppercase;
+
+    padding: 10px 20px;
+    background-color: var(--almost-black);
+    box-shadow: none;
+    border-radius: 0;
 }
 :is(.nav-previous, .nav-next) a,
 .page-numbers  {

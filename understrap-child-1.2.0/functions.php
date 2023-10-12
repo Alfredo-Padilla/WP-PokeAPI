@@ -375,7 +375,7 @@ function pokemon_save_custom_meta_box( $post_id ) {
 		$types_nonce = $_POST['pokemon_types_nonce'];
 	}
 
-	/* if ( ! isset( $types_nonce ) ) {
+	if ( ! isset( $types_nonce ) ) {
 		return;
 	}
 
@@ -390,14 +390,6 @@ function pokemon_save_custom_meta_box( $post_id ) {
 	if ( ! current_user_can( 'edit_post', $post_id ) ) {
 		return;
 	}
-
-	if ( ! isset( $_POST['pokemon_types'] ) ) {
-		return;
-	} */
-
-	$types = $_POST['pokemon_types'];
-	update_post_meta( $post_id, 'primary_type', $types['primary_type'] );
-	update_post_meta( $post_id, 'secondary_type', $types['secondary_type'] );
 
 	$weight = $_POST['pokemon_weight'];
 	update_post_meta( $post_id, 'pokemon_weight', $weight );
@@ -653,9 +645,40 @@ function pokemon_api_full( $data ) {
 	return $pokemon_list;
 }
 
-/**
- * Funtion to handle AJAX switching between newest pokedex number and oldest
-*/
 
+
+/**
+ * Funtion to handle AJAX displaying the oldest pokedex number
+*/
+function pokemon_display_oldest_number() {
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'pokemon-switch-pokedex-number' ) ) {
+		wp_send_json_error( 'Invalid nonce' );
+	}
+
+	$post_id = $_POST['post_id'];
+	$oldest_pokedex_number = get_post_meta( $post_id, 'pokedex_number_oldest', true );
+	$oldest_pokedex_number_game = get_post_meta( $post_id, 'pokedex_number_oldest_game', true );
+
+	// Return the new pokedex numbers
+	wp_send_json_success( array(
+		'post_id' => $post_id,
+		'newest_pokedex_number' => $oldest_pokedex_number,
+		'newest_pokedex_number_game' => $oldest_pokedex_number_game,
+	));
+}
+add_action( 'wp_ajax_pokemon_display_oldest_number', 'pokemon_display_oldest_number' );
+add_action( 'wp_ajax_nopriv_pokemon_display_oldest_number', 'pokemon_display_oldest_number' );
+
+/**
+ * Funtion to enqueue AJAX js
+*/
+function pokemon_ajax_scripts() {
+	wp_enqueue_script( 'pokemon-ajax', get_stylesheet_directory_uri() . '/js/ajax.js', array( 'jquery' ), '1.0', true );
+	wp_localize_script( 'pokemon-ajax', 'pokemon_ajax_object', array( 
+		'ajax_url' => admin_url( 'admin-ajax.php' ),
+		'nonce' => wp_create_nonce( 'pokemon-switch-pokedex-number' ),
+	));
+}
+add_action( 'wp_enqueue_scripts', 'pokemon_ajax_scripts' );
 
 flush_rewrite_rules( false );

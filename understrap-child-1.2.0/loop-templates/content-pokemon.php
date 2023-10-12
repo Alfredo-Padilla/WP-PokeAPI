@@ -70,7 +70,7 @@ $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
             <p>
                 Weight: <?php echo $pokemon_weight; ?>kg<br />
                 Newest (<?php echo $pokedex_number_old_game; ?>) Pokedex Number: <?php echo $pokedex_number_old; ?><br />
-                Oldest (<?php echo $pokedex_number_new_game; ?>) Pokedex Number: <?php echo $pokedex_number_new; ?>
+                <a id="show-oldest" class="btn btn-main" data-id="<?php the_ID(); ?>">Show Oldest</a>
             </p>
         </div>
 
