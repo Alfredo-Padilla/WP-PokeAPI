@@ -98,6 +98,17 @@ add_action( 'customize_controls_enqueue_scripts', 'understrap_child_customize_co
 # FUNCTIONS FOR POKEMON SITE #
 ##############################
 /**
+ * Enqueue build script
+ */
+function pokemon_enqueue_scripts() {
+	$args = include( get_stylesheet_directory() . '/public/index.asset.php' );
+	wp_enqueue_script( 'pokemon', get_stylesheet_directory_uri() . '/public/scripts.js', $args['dependencies'], $args['version'], true );
+}
+add_action( 'wp_enqueue_scripts', 'pokemon_enqueue_scripts' );
+
+
+
+/**
  * Pokemon type taxonomy
  */
 function pokemon_type_taxonomy() {
