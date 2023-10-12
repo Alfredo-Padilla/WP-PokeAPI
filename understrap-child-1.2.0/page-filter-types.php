@@ -73,7 +73,6 @@ if ( $types[0] ==  $ALL ) {
         </div>
 
         <div class="row mt-3">
-            <!-- Display data -->
             <?php foreach ($pokemon as $post) : setup_postdata($post); ?>
                 <div class="col-md-4">
                     <div class="card mb-2">
@@ -93,7 +92,6 @@ if ( $types[0] ==  $ALL ) {
                 </div>
             <?php endforeach; ?>
 
-            <!-- Display pagination -->
             <div class="col-md-12 mt-5  d-flex justify-content-center">
                 <?php
                 $total = $total_posts  / $posts_per_page;
@@ -104,9 +102,6 @@ if ( $types[0] ==  $ALL ) {
                 }
                 ?>
             </div>
-
-
-
         </div><!-- .row -->
     </div><!-- #content -->
 </div><!-- #single-wrapper -->

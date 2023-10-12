@@ -209,9 +209,6 @@ function pokemon_add_custom_meta_boxes() {
 }
 add_action( 'add_meta_boxes', 'pokemon_add_custom_meta_boxes' );
 
-
-
-
 /**
  * Show fields in editor for Custom Pokemon post type
  */
@@ -301,10 +298,10 @@ function pokemon_pokedex_ids_meta_box() {
 	</table>
 	<?php
 }
+
 /**
  * Attacks meta box
  */
-
 function pokemon_attacks_meta_box() {
 	global $post;
 	$meta = get_post_meta( $post->ID, 'pokemon_attacks', true );
@@ -450,8 +447,6 @@ function download_random_pokemon_data() {
 	// Save to post meta and return post URL
 	return get_permalink( save_pokemon_data( $api_data ) );
 }
-
-
 
 /**
  * Function to save each individual pokemon data

@@ -16,7 +16,7 @@ if ( isset($types[1]) ) {
     $secondary_type = $types[1]->name;
 }
 
-// Get postmeta data
+// Get post meta data
 $photo_url = get_the_post_thumbnail_url( $post->ID, 'large' );
 $pokemon_description = get_post_meta( $post->ID, 'pokemon_description', true );
 $pokemon_weight = get_post_meta( $post->ID, 'pokemon_weight', true );
@@ -89,15 +89,10 @@ $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
                 <?php } ?>
             </table>
         </div>
-        <?php
-		?>
-
 	</div><!-- .entry-content -->
 
 	<footer class="entry-footer">
-
 		<?php understrap_entry_footer(); ?>
-
 	</footer><!-- .entry-footer -->
 
 </article><!-- #post-<?php the_ID(); ?> -->
