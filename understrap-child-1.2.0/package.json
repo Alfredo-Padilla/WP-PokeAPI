@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/understrap/understrap-child.git"
+    "url": "git+https://github.com/understrap/understrap-child.git"
   },
   "keywords": [
     "wordpress",
@@ -41,7 +41,6 @@
     "url": "https://github.com/understrap/understrap-child/issues"
   },
   "homepage": "https://understrap.com",
-  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.19.6",
     "@babel/preset-env": "^7.19.4",
@@ -67,5 +66,8 @@
     "sass": "^1.56.0",
     "terser": "^5.15.1",
     "understrap": "github:understrap/understrap#develop"
+  },
+  "dependencies": {
+    "webpack": "^5.88.2"
   }
 }

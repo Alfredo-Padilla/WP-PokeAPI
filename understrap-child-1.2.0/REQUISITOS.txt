@@ -1,10 +1,10 @@
 TAREAS PENDIENTES
-    - Pagina home
+    - Hacer que tire con react
     - Funcionalidad filtros
     - Acabar los bloques del editor
-
-    - Guardar el nombre de la version gunto con el numero pokedex
+    - Pagina home
     - El numero mas nuevo se tiene que acceder mediante ajax
+    - Escribir READMNE.md
 
 
 
