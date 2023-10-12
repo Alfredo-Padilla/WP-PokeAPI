@@ -30,13 +30,13 @@ TAREAS PENDIENTES
         1: Pokemon ordenado por No reciente
         2: Todos los datos como JSON
 
-4. Pagina filtro por tipos
+## 4. Pagina filtro por tipos
 
 ## 5. Pagina random pokemon
 
 ## 6. Pagina generate pokemon
 
-7. API WP 2 endpoints
+## 7. API WP 2 endpoints
 
 8. Integracion DAPI (https://digimon-api.com/)
 

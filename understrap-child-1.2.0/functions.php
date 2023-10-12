@@ -292,10 +292,10 @@ function pokemon_pokedex_ids_meta_box() {
 	</table>
 	<?php
 }
-
 /**
  * Attacks meta box
  */
+
 function pokemon_attacks_meta_box() {
 	global $post;
 	$meta = get_post_meta( $post->ID, 'pokemon_attacks', true );
@@ -332,15 +332,6 @@ function pokemon_attacks_meta_box() {
 	
 	<?php
 }
-
-/**
- * Auto update on add attack/remove attack
- */
-/* function pokemon_attacks_meta_box_scripts() {
-	wp_enqueue_script( 'pokemon-attacks', get_stylesheet_directory_uri() . '/js/pokemon-attacks.js', array( 'jquery' ), '1.0', true );
-
-}
-add_action( 'admin_enqueue_scripts', 'pokemon_attacks_meta_box_scripts' ); */
 
 /**
  * API ID meta box
@@ -680,5 +671,6 @@ function pokemon_ajax_scripts() {
 	));
 }
 add_action( 'wp_enqueue_scripts', 'pokemon_ajax_scripts' );
+
 
 flush_rewrite_rules( false );
