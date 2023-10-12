@@ -46,9 +46,9 @@ $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
 
             <div class="col-12 col-md  d-flex align-items-center">
                 <div class="pokemon-type d-flex">
-                    <a pokemon-type="<?php echo $primary_type; ?>" class="pokemon-type-filter me-2"><?php echo $primary_type; ?></a>
+                    <a href="<?php echo get_site_url() . '/filter-types/?types=' . $primary_type; ?>" pokemon-type="<?php echo $primary_type; ?>" class="me-2"><?php echo $primary_type; ?></a>
                     <?php if (isset ($secondary_type) ) { ?>
-                        <a pokemon-type="<?php echo $secondary_type; ?>" class="pokemon-type-filter"><?php echo $secondary_type; ?></a>
+                        <a href="<?php echo get_site_url() . '/filter-types/?types=' . $secondary_type; ?>" pokemon-type="<?php echo $secondary_type; ?>"><?php echo $secondary_type; ?></a>
                     <?php } ?>
                 </div>
             </div>
@@ -59,13 +59,13 @@ $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
         <?php 
         $content = get_the_content();
         if ( $content != null ) : ?>
-            <div class="pokemon-description mt-5">
+            <div class="pokemon-description mt-3">
                 <h2>Pokemon Description</h2>
                 <p><?php echo $content; ?></p>
             </div>
         <?php endif; ?>
 
-        <div class="pokemon-data mt-5">
+        <div class="pokemon-data mt-3">
             <h2>Pokemon Data</h2>
             <p>
                 Weight: <?php echo $pokemon_weight; ?>kg<br />
@@ -74,7 +74,7 @@ $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
             </p>
         </div>
 
-        <div class="pokemon-attacks mt-5">
+        <div class="pokemon-attacks mt-3">
             <table class="attacks-table">
                 <tr>
                     <th>Attack Name</th>

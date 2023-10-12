@@ -4,22 +4,50 @@
  *
  */
 
+ $ALL = 'all';
+
+// Get types from url
+if ( isset($_GET['types']) ) {
+    $types = [$_GET['types']];
+} else {
+    $url = get_site_url() . '/filter-types/?types=' . $ALL;
+    wp_redirect($url);
+}
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 get_header();
 $container = get_theme_mod( 'understrap_container_type' );
 
-// This page shows every pokemon with pagination every 6 posts
 // Get data
 $posts_per_page = 6;
 $total_posts = wp_count_posts('pokemon')->publish;
-$pokemon = get_posts(array(
-    'post_type' => 'pokemon',
-    'posts_per_page' => $posts_per_page,
-    'orderby' => 'date',
-    'paged' => get_query_var('paged') ? get_query_var('paged') : 1
-));
+
+if ( $types[0] ==  $ALL ) {
+    $pokemon = get_posts(array(
+        'post_type' => 'pokemon',
+        'posts_per_page' => $posts_per_page,
+        'orderby' => 'date',
+        'paged' => get_query_var('paged') ? get_query_var('paged') : 1,
+    ));
+} else {
+    $pokemon = get_posts(array(
+        'post_type' => 'pokemon',
+        'posts_per_page' => $posts_per_page,
+        'orderby' => 'date',
+        'paged' => get_query_var('paged') ? get_query_var('paged') : 1,
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'pokemon_type',
+                'field' => 'slug',
+                'terms' => $types,
+                'operator' => 'IN'
+            )
+        )
+    ));
+    $total_posts = count($pokemon);
+}
 ?>
 
 
@@ -36,7 +64,9 @@ $pokemon = get_posts(array(
             echo '<div class="d-flex">';
             // Display pokemon types
             foreach ($pokemon_types as $pokemon_type) {
-                echo '<a href="#" class="pokemon-type-filter me-2" pokemon-type="' . $pokemon_type->slug . '">' . $pokemon_type->name . '</a>';
+                $class = "pokemon-type-filter me-2 ";
+                $class .= in_array($pokemon_type->name, $types) || $types[0] ==  $ALL? "enabled":"";
+                echo '<a href="#" class="' . $class . '" pokemon-type="' . $pokemon_type->slug . '">' . $pokemon_type->name . '</a>';
             }
             echo '</div>';
             ?>
@@ -66,9 +96,12 @@ $pokemon = get_posts(array(
             <!-- Display pagination -->
             <div class="col-md-12 mt-5  d-flex justify-content-center">
                 <?php
-                echo paginate_links(array(
-                    'total' => ceil($total_posts / $posts_per_page),
-                ));
+                $total = $total_posts  / $posts_per_page;
+                if ( $total > 1 ) {
+                    echo paginate_links(array(
+                        'total' => ceil($total),
+                    ));
+                }
                 ?>
             </div>
 

@@ -101,7 +101,7 @@ add_action( 'customize_controls_enqueue_scripts', 'understrap_child_customize_co
  * Enqueue build script
  */
 function pokemon_enqueue_scripts() {
-	$args = include( get_stylesheet_directory() . '/public/index.asset.php' );
+	$args = include( get_stylesheet_directory() . '/public/scripts.asset.php' );
 	wp_enqueue_script( 'pokemon', get_stylesheet_directory_uri() . '/public/scripts.js', $args['dependencies'], $args['version'], true );
 }
 add_action( 'wp_enqueue_scripts', 'pokemon_enqueue_scripts' );
@@ -316,10 +316,19 @@ function pokemon_attacks_meta_box() {
 			if ( count( $attacks ) > 0 ) :
 				foreach ( $attacks as $attack ) {
 					if ( isset( $attack['name'] ) || isset( $attack['description'] ) ) {
-						printf(
-							'<tr id="attack-%1$s"><td><input type="text" name="pokemon_attacks[%1$s][name]" id="pokemon_attacks[%1$s][name]" class="regular-text" value="%2$s"></td><td><input type="text" name="pokemon_attacks[%1$s][description]" id="pokemon_attacks[%1$s][description]" class="regular-text" value="%3$s"></td><td><a class="button remove-attack" href="#">-</a></td></tr>',
-							$c, $attack['name'], $attack['description']
-						);
+						?>
+						<tr> 
+							<td> 
+								<input type="text" id="<?php echo $c; ?>" name="<?php echo $attack['name']; ?>" class="regular-text" value="<?php echo $attack['name']; ?>">
+							</td> 
+							<td> 
+								<input type="text" id="<?php echo $c; ?>" class="regular-text" value="<?php echo $attack['description']; ?>">
+							</td> 
+							<td>
+								<a class="button remove-attack" href="#">-</a>
+							</td>
+						</tr>
+						<?php
 						$c++;
 					}
 				}

@@ -1,9 +1,8 @@
 TAREAS PENDIENTES
-    - Hacer que tire con react
-    - Funcionalidad filtros
     - Acabar los bloques del editor
-    - Pagina home
     - El numero mas nuevo se tiene que acceder mediante ajax
+    - Pagina home
+    - Fuentes
     - Escribir READMNE.md
 
 
