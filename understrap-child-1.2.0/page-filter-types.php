@@ -36,7 +36,7 @@ $pokemon = get_posts(array(
             echo '<div class="d-flex">';
             // Display pokemon types
             foreach ($pokemon_types as $pokemon_type) {
-                echo '<a href="#" class="btn btn-primary pokemon-type-filter me-2" pokemon-type="' . $pokemon_type->slug . '">' . $pokemon_type->name . '</a>';
+                echo '<a href="#" class="pokemon-type-filter me-2" pokemon-type="' . $pokemon_type->slug . '">' . $pokemon_type->name . '</a>';
             }
             echo '</div>';
             ?>

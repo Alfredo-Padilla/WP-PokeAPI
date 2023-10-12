@@ -20,10 +20,19 @@ if ( isset($types[1]) ) {
 $photo_url = get_the_post_thumbnail_url( $post->ID, 'large' );
 $pokemon_description = get_post_meta( $post->ID, 'pokemon_description', true );
 $pokemon_weight = get_post_meta( $post->ID, 'pokemon_weight', true );
+
 $pokedex_number_old = get_post_meta( $post->ID, 'pokedex_number_oldest', true );
+$pokedex_number_old_game = get_post_meta( $post->ID, 'pokedex_number_oldest_game', true );
+
+if ( $pokedex_number_old == null ) {
+    $pokedex_number_old = get_post_meta( $post->ID, 'pokemon_api_id', true );
+    $pokedex_number_old_game = "Unknown Game";
+}
+
 $pokedex_number_new = get_post_meta( $post->ID, 'pokedex_number_newest', true );
-$attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
-                    
+$pokedex_number_new_game = get_post_meta( $post->ID, 'pokedex_number_newest_game', true );
+
+$attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );              
 ?>
 
 <article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
@@ -36,10 +45,10 @@ $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
             </div>
 
             <div class="col-12 col-md  d-flex align-items-center">
-                <div class="pokemon-type">
-                    <a pokemon-type="<?php echo $primary_type; ?>" ><?php echo $primary_type; ?></a>
+                <div class="pokemon-type d-flex">
+                    <a pokemon-type="<?php echo $primary_type; ?>" class="pokemon-type-filter me-2"><?php echo $primary_type; ?></a>
                     <?php if (isset ($secondary_type) ) { ?>
-                        <a pokemon-type="<?php echo $secondary_type; ?>"><?php echo $secondary_type; ?></a>
+                        <a pokemon-type="<?php echo $secondary_type; ?>" class="pokemon-type-filter"><?php echo $secondary_type; ?></a>
                     <?php } ?>
                 </div>
             </div>
@@ -47,17 +56,21 @@ $attacks = get_post_meta( $post->ID, 'pokemon_attacks', true );
 	</header><!-- .entry-header -->
 
 	<div class="entry-content">
-        <div class="pokemon-description mt-5">
-            <h2>Pokemon Description</h2>
-            <p><?php the_content(); ?></p>
-        </div>
+        <?php 
+        $content = get_the_content();
+        if ( $content != null ) : ?>
+            <div class="pokemon-description mt-5">
+                <h2>Pokemon Description</h2>
+                <p><?php echo $content; ?></p>
+            </div>
+        <?php endif; ?>
 
         <div class="pokemon-data mt-5">
             <h2>Pokemon Data</h2>
             <p>
                 Weight: <?php echo $pokemon_weight; ?>kg<br />
-                Oldest Pokedex Number: <?php echo $pokedex_number_old; ?><br />
-                Newest Pokedex Number: <?php echo $pokedex_number_new; ?>
+                Newest (<?php echo $pokedex_number_old_game; ?>) Pokedex Number: <?php echo $pokedex_number_old; ?><br />
+                Oldest (<?php echo $pokedex_number_new_game; ?>) Pokedex Number: <?php echo $pokedex_number_new; ?>
             </p>
         </div>
 

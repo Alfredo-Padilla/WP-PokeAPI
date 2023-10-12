@@ -261,8 +261,20 @@ function pokemon_pokedex_ids_meta_box() {
 		</thead>
 		<tbody>
 			<tr>
+				<td>(Use Pokedex number)</td>
+				<td>(Use Pokedex number)</td>
+			</tr>
+			<tr>
 				<td><input type="text" name="pokemon_pokedex_ids[oldest_pokedex_id]" id="pokemon_pokedex_ids[oldest_pokedex_id]" class="regular-text" value="<?php echo $oldest_pokedex_id; ?>"></td>
 				<td><input type="text" name="pokemon_pokedex_ids[newest_pokedex_id]" id="pokemon_pokedex_ids[newest_pokedex_id]" class="regular-text" value="<?php echo $newest_pokedex_id; ?>"></td>
+			</tr>
+			<tr>
+				<td>Game</td>
+				<td>Game</td>
+			</tr>
+			<tr>
+				<td><input type="text" name="pokemon_pokedex_ids[oldest_pokedex_id_game]" id="pokemon_pokedex_ids[oldest_pokedex_id_game]" class="regular-text" value="<?php echo get_post_meta( $post->ID, 'pokedex_number_oldest_game', true ); ?>"></td>
+				<td><input type="text" name="pokemon_pokedex_ids[newest_pokedex_id_game]" id="pokemon_pokedex_ids[newest_pokedex_id_game]" class="regular-text" value="<?php echo get_post_meta( $post->ID, 'pokedex_number_newest_game', true ); ?>"></td>
 			</tr>
 		</tbody>
 	</table>
@@ -386,6 +398,8 @@ function pokemon_save_custom_meta_box( $post_id ) {
 	$pokedex_ids = $_POST['pokemon_pokedex_ids'];
 	update_post_meta( $post_id, 'pokedex_number_oldest', $pokedex_ids['oldest_pokedex_id'] );
 	update_post_meta( $post_id, 'pokedex_number_newest', $pokedex_ids['newest_pokedex_id'] );
+	update_post_meta( $post_id, 'pokedex_number_oldest_game', $pokedex_ids['oldest_pokedex_id_game'] );
+	update_post_meta( $post_id, 'pokedex_number_newest_game', $pokedex_ids['newest_pokedex_id_game'] );
 
 	if ( ! isset( $_POST['pokemon_attacks'] ) ) {
 		return;
@@ -481,20 +495,10 @@ function save_pokemon_data( $api_data ) {
 
 	// Primary and secondary type of pokemon as taxonomy
 	$primary_type = $api_data->types[0]->type->name;
-
-	// Create a new term if it doesn't exist
-	/* if ( ! term_exists( $primary_type, 'pokemon_type' ) ) {
-		wp_insert_term( $primary_type, 'pokemon_type' );
-	} */
 	wp_set_object_terms( $post_id, $primary_type, 'pokemon_type', true );
 
 	if ( isset( $api_data->types[1] ) ) {
 		$secondary_type = $api_data->types[1]->type->name;
-		
-		// Create a new term if it doesn't exist
-		/* if ( ! term_exists( $secondary_type, 'pokemon_type' ) ) {
-			wp_insert_term( $secondary_type, 'pokemon_type' );
-		} */
 	}
 	wp_set_object_terms( $post_id, $secondary_type, 'pokemon_type', true );
 
@@ -504,15 +508,24 @@ function save_pokemon_data( $api_data ) {
 	update_post_meta( $post_id, 'pokemon_weight', $pokemon_weight );
 
 
-	// Pokedex number in older version of the game
-	$pokedex_number_old = $api_data->id;
-	update_post_meta( $post_id, 'pokedex_number_oldest', $pokedex_number_old );
-
-
-	// Pokedex number in the most recent version of the game
-	$pokedex_number_new = $api_data->id;
-	update_post_meta( $post_id, 'pokedex_number_newest', $pokedex_number_new );
-
+	// Pokedex number in older and newest version of the game
+	if ( count($api_data->game_indices) > 0 ) {
+		$pokedex_number_old = $api_data->game_indices[0]->game_index;
+		$pokedex_number_old_game = $api_data->game_indices[0]->version->name;
+		update_post_meta( $post_id, 'pokedex_number_oldest', $pokedex_number_old );
+		update_post_meta( $post_id, 'pokedex_number_oldest_game', $pokedex_number_old_game );
+	
+		$last = count($api_data->game_indices) - 1;
+		$pokedex_number_new = $api_data->game_indices[$last]->game_index;
+		$pokedex_number_new_game = $api_data->game_indices[$last]->version->name;
+		update_post_meta( $post_id, 'pokedex_number_newest', $pokedex_number_new );
+		update_post_meta( $post_id, 'pokedex_number_newest_game', $pokedex_number_new_game );
+	} else {
+		update_post_meta( $post_id, 'pokedex_number_oldest', $api_data->id);
+		update_post_meta( $post_id, 'pokedex_number_oldest_game', 'Unknown');
+		update_post_meta( $post_id, 'pokedex_number_newest', $api_data->id);
+		update_post_meta( $post_id, 'pokedex_number_newest_game', 'Unknown');
+	}
 
 	// The attacks of said pokémon with its short description
 	$attacks = $api_data->moves;

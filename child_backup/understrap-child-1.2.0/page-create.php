@@ -15,7 +15,7 @@ if ( current_user_can( 'publish_posts' ) ) {
     get_header();
     $container = get_theme_mod( 'understrap_container_type' );
     ?>
-    <div class="wrapper" id="single-wrapper">
+    <div class="wrapper" id="create-wrapper">
         <div class="<?php echo esc_attr( $container ); ?>" id="content" tabindex="-1">
             <div class="row">
                 <h1>You don't have enough user permissions...</h1>

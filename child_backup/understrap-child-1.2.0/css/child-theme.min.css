@@ -10,6 +10,11 @@
 /*# sourceMappingURL=child-theme.min.css.map */
 
 :root {
+    --almost-white: #ececec;
+    --accent-light: #9fd3c7;
+    --accent-dark: #385170;
+    --almost-black: #142d4c;
+
     --normal-color: #A8A878;
     --fighting-color: #C03028;
     --flying-color: #A890F0;
@@ -31,7 +36,9 @@
     --unknown-color: #68A090;
     --shadow-color: #493963;
 }
-
+body {
+    background-color: var(--accent-dark);
+}
 /* MAIN HEADER */
 #wrapper-navbar {
     max-width: calc(100% - 30px);
@@ -43,23 +50,36 @@
     left: 0;
     right: 0;
     margin: 0 auto;
+    z-index: 100;
 }
 body.admin-bar #wrapper-navbar {
     top: 46px;
 }
 #main-nav {
-    background-color: rgba(0, 0, 0, 0.75) !important;
+    /* background-color: rgba(0, 0, 0, 0.75) !important; */
+    background-color: var(--almost-black) !important;
+}
+#main-nav a {
+    color: var(--almost-white) !important;
 }
 
 /* MAIN CONTENT */
 #page > .wrapper:first-of-type {
-    padding-top: 83px;
+    max-width: 1200px;
+    width: 80%;
+    margin: 0 auto;
+    background: var(--almost-white);
+    padding: 25px;
+    margin-top: 83px;
 }
 
 .entry-header {
     padding: 10px 20px;
-    background-color: rgb(230, 230, 230);
-    border-bottom: 5px solid var(--pokemon-color);
+    background-color: #fff;
+
+    /* border-bottom: 5px solid var(--pokemon-color);
+    border-right: 5px solid var(--pokemon-color); */
+    box-shadow: 5px 5px 0 var(--pokemon-color);
 }
 
 a[pokemon-type] {
@@ -72,6 +92,20 @@ a[pokemon-type] {
     padding: 5px 10px;
     border-radius: 5px;
     background-color: var(--pokemon-color);
+
+    cursor: pointer;
+}
+.pokemon-type-filter[pokemon-type]:hover {
+    transform: scale(1.1);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+.btn[pokemon-type] {
+    text-shadow: none;
+    border: none;
+}
+.btn[pokemon-type]:hover {
+    background-color: var(--pokemon-color);
+    filter: brightness(.8);
 }
 *[pokemon-type="normal"] {
     --pokemon-color: var(--normal-color) !important;
@@ -137,12 +171,11 @@ a[pokemon-type] {
 .attacks-table {
     width: 100%;
     border-collapse: collapse;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 .attacks-table th {
     font-weight: bold;
     text-transform: uppercase;
-    background-color: #000;
+    background-color: var(--almost-black);
     color: #fff;
 }
 .attacks-table tr {
@@ -159,7 +192,7 @@ a[pokemon-type] {
     width: 25%;
 }
 .attacks-table td:first-child {
-    border-right: 3px solid #000;
+    border-right: 3px solid var(--almost-black);
 }
 
 
@@ -168,17 +201,28 @@ a[pokemon-type] {
     margin-top: 15px;
 }
 .nav-previous,
-.nav-next {
+.nav-next,
+.page-numbers {
     padding: 10px 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: var(--almost-black);
+    color: var(--almost-white);
 
 }
-:is(.nav-previous, .nav-next) a {
-    color: #fff !important;
+:is(.nav-previous, .nav-next) a,
+.page-numbers  {
+    color: var(--almost-white) !important;
     text-decoration: none;
     text-transform: uppercase;
 
+}
+
+.card {
+    min-height: 325px;
+}
+.card,
+.card * {
+    border-radius: 0 !important;
 }
 
 @media (max-width: 1000px) {
@@ -191,5 +235,10 @@ a[pokemon-type] {
         left: 0;
         right: 0;
         margin: 0 auto;
+    }
+    #page > .wrapper:first-of-type {
+        width: 100%;
+        padding: 83px 0 0 0;
+        margin: 0;
     }
 }
