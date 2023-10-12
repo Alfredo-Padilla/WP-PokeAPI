@@ -111,19 +111,22 @@ a[pokemon-type] {
 
     cursor: pointer;
 }
+a[pokemon-type]:hover {
+    transform: scale(1.1);
+    box-shadow: 2px 2px 0 var(--almost-black);
+    opacity: 1;
+}
 .pokemon-type-filter[pokemon-type]:not(.enabled) {
     opacity: 0.5;
 }
-.pokemon-type-filter[pokemon-type]:hover {
-    transform: scale(1.1);
-    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
-    opacity: 1;
-}
+
 .btn[pokemon-type] {
     text-shadow: none;
     border: none;
 }
 .btn[pokemon-type]:hover {
+    transform: none;
+    box-shadow: none;
     background-color: var(--pokemon-color);
     filter: brightness(.8);
 }

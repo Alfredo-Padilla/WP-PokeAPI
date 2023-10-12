@@ -105,6 +105,7 @@ function pokemon_enqueue_scripts() {
 	wp_enqueue_script( 'pokemon', get_stylesheet_directory_uri() . '/public/scripts.js', $args['dependencies'], $args['version'], true );
 }
 add_action( 'wp_enqueue_scripts', 'pokemon_enqueue_scripts' );
+add_action( 'admin_enqueue_scripts', 'pokemon_enqueue_scripts' );
 
 
 
@@ -306,54 +307,40 @@ function pokemon_attacks_meta_box() {
 	<table id="pokemon_attacks" class="table">
 		<thead>
 			<tr>
-				<th>Name</th>
-				<th>Description</th>
+				<th>Attack Name</th>
+				<th>Attack Description</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
-			<?php
-			$c = 0;
-			if ( count( $attacks ) > 0 ) :
-				foreach ( $attacks as $attack ) {
-					if ( isset( $attack['name'] ) || isset( $attack['description'] ) ) {
-						?>
-						<tr> 
-							<td> 
-								<input type="text" id="<?php echo $c; ?>" name="<?php echo $attack['name']; ?>" class="regular-text" value="<?php echo $attack['name']; ?>">
-							</td> 
-							<td> 
-								<input type="text" id="<?php echo $c; ?>" class="regular-text" value="<?php echo $attack['description']; ?>">
-							</td> 
-							<td>
-								<a class="button remove-attack" href="#">-</a>
-							</td>
-						</tr>
-						<?php
-						$c++;
-					}
-				}
-			endif;
-
-			?>
-			<tr id="attack-<?php echo $c; ?>">
-				<td><input type="text" name="pokemon_attacks[<?php echo $c; ?>][name]" id="pokemon_attacks[<?php echo $c; ?>][name]" class="regular-text"></td>
-				<td><input type="text" name="pokemon_attacks[<?php echo $c; ?>][description]" id="pokemon_attacks[<?php echo $c; ?>][description]" class="regular-text"></td>
-				<td><a class="button remove-attack" href="#">-</a></td>
+			<?php foreach ( $attacks as $index => $attack ) { ?>
+				<tr>
+					<td><input type="text" name="pokemon_attacks[<?php echo $index; ?>][name]" id="pokemon_attacks[<?php echo $index; ?>][name]" class="regular-text" value="<?php echo $attack['name']; ?>"></td>
+					<td><input type="text" name="pokemon_attacks[<?php echo $index; ?>][description]" id="pokemon_attacks[<?php echo $index; ?>][description]" class="regular-text" value="<?php echo $attack['description']; ?>"></td>
+					<td><button type="button" class="button button-secondary remove-attack">Remove</button></td>
+				</tr>
+			<?php } ?>
+			<tr>
+				<td><input type="text" name="pokemon_attacks[<?php echo count($attacks); ?>][name]" id="pokemon_attacks[<?php echo count($attacks); ?>][name]" class="regular-text" value=""></td>
+				<td><input type="text" name="pokemon_attacks[<?php echo count($attacks); ?>][description]" id="pokemon_attacks[<?php echo count($attacks); ?>][description]" class="regular-text" value=""></td>
+				<td><button type="button" class="button button-secondary remove-attack">Remove</button></td>
 			</tr>
-			<tr id="attack-<?php echo $c + 1; ?>"></tr>
 		</tbody>
 	</table>
-	<p><a class="button add-attack" href="#">Add Attack</a></p>
+	<button type="button" class="button button-secondary add-attack">Add Attack</button>
+
+	
 	<?php
 }
 
 /**
  * Auto update on add attack/remove attack
  */
-function pokemon_attacks_meta_box_scripts() {
+/* function pokemon_attacks_meta_box_scripts() {
 	wp_enqueue_script( 'pokemon-attacks', get_stylesheet_directory_uri() . '/js/pokemon-attacks.js', array( 'jquery' ), '1.0', true );
+
 }
-add_action( 'admin_enqueue_scripts', 'pokemon_attacks_meta_box_scripts' );
+add_action( 'admin_enqueue_scripts', 'pokemon_attacks_meta_box_scripts' ); */
 
 /**
  * API ID meta box
@@ -388,7 +375,7 @@ function pokemon_save_custom_meta_box( $post_id ) {
 		$types_nonce = $_POST['pokemon_types_nonce'];
 	}
 
-	if ( ! isset( $types_nonce ) ) {
+	/* if ( ! isset( $types_nonce ) ) {
 		return;
 	}
 
@@ -406,7 +393,7 @@ function pokemon_save_custom_meta_box( $post_id ) {
 
 	if ( ! isset( $_POST['pokemon_types'] ) ) {
 		return;
-	}
+	} */
 
 	$types = $_POST['pokemon_types'];
 	update_post_meta( $post_id, 'primary_type', $types['primary_type'] );
@@ -421,11 +408,10 @@ function pokemon_save_custom_meta_box( $post_id ) {
 	update_post_meta( $post_id, 'pokedex_number_oldest_game', $pokedex_ids['oldest_pokedex_id_game'] );
 	update_post_meta( $post_id, 'pokedex_number_newest_game', $pokedex_ids['newest_pokedex_id_game'] );
 
-	if ( ! isset( $_POST['pokemon_attacks'] ) ) {
-		return;
-	}
+	// Attacks
 	$attacks = $_POST['pokemon_attacks'];
 	update_post_meta( $post_id, 'pokemon_attacks', $attacks );
+
 
 	$api_id = $_POST['pokemon_api_id'];
 	update_post_meta( $post_id, 'pokemon_api_id', $api_id );
@@ -579,6 +565,97 @@ function save_pokemon_data( $api_data ) {
 	return $post_id;
 }
 
+
+
+/**
+ * Function to create a new API endpint that returns the pokemon list
+ */
+function pokemon_api_endpoints() {
+	register_rest_route( 'pokemon/v1', '/list', array(
+		'methods' => 'GET',
+		'callback' => 'pokemon_api_list',
+	) );
+}
+add_action( 'rest_api_init', 'pokemon_api_endpoints' );
+
+/**
+ * Function to return list of pokemon
+ */
+function pokemon_api_list() {
+	$args = array(
+		'post_type' => 'pokemon',
+		'posts_per_page' => -1,
+	);
+	$pokemon = new WP_Query( $args );
+	
+	$pokemon_list = array();
+	while ( $pokemon->have_posts() ) {
+		$pokemon->the_post();
+		$pokemon_list[] = array(
+			'name' => get_the_title(),
+			'api id' => get_post_meta( get_the_ID(), 'pokemon_api_id', true ),
+		);
+	}
+
+	$response = new WP_REST_Response( $pokemon_list );
+	$response->set_status( 200 );
+
+	return $response;
+}
+
+/**
+ * Function to create a new API endpint that returns the full JSON of a pokemon
+ */
+function pokemon_api_endpoints_full() {
+	register_rest_route( 'pokemon/v1', '/(?P<id>\d+)', array(
+		'methods' => 'GET',
+		'callback' => 'pokemon_api_full',
+	) );
+}
+add_action( 'rest_api_init', 'pokemon_api_endpoints_full' );
+
+/**
+ * Function to return full JSON of a pokemon
+ */
+function pokemon_api_full( $data ) {
+	$args = array(
+		'post_type' => 'pokemon',
+		'posts_per_page' => -1,
+		'meta_query' => array(
+			array(
+				'key' => 'pokedex_number_newest',
+				'value' => $data['id'],
+				'compare' => '=',
+			),
+		),
+	);
+	$pokemon = new WP_Query( $args );
+
+	$pokemon_list = array();
+	while ( $pokemon->have_posts() ) {
+		$pokemon->the_post();
+		$pokemon_list[] = array(
+			'name' => get_the_title(),
+			'description' => get_the_content(),
+			'newest pokedex id' => get_post_meta( get_the_ID(), 'pokedex_number_newest', true ),
+			'oldest pokedex id' => get_post_meta( get_the_ID(), 'pokedex_number_oldest', true ),
+			'oldest pokedex id game' => get_post_meta( get_the_ID(), 'pokedex_number_oldest_game', true ),
+			'newest pokedex id game' => get_post_meta( get_the_ID(), 'pokedex_number_newest_game', true ),
+			'primary type' => get_the_terms( get_the_ID(), 'pokemon_type' )[0]->name,
+			'secondary type' => get_the_terms( get_the_ID(), 'pokemon_type' )[1]->name,
+			'weight' => get_post_meta( get_the_ID(), 'pokemon_weight', true ),
+			'attacks' => get_post_meta( get_the_ID(), 'pokemon_attacks', true ),
+			'api id' => get_post_meta( get_the_ID(), 'pokemon_api_id', true ),
+
+		);
+	}
+
+	return $pokemon_list;
+}
+
+/**
+ * Funtion to handle AJAX switching between newest pokedex number and oldest
+*/
 
 
 flush_rewrite_rules( false );

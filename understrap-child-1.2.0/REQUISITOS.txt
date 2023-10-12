@@ -1,16 +1,14 @@
 TAREAS PENDIENTES
-    - Acabar los bloques del editor
     - El numero mas nuevo se tiene que acceder mediante ajax
+        - Quitar el numero mas nuevo
+        - Añadir un boton que dice 'View Oldest' o 'View Newest'
+    - Acabar los bloques del editor
     - Pagina home
     - Fuentes
     - Escribir READMNE.md
 
 
-
-
-
 =======================================================================
-
 
 
 
