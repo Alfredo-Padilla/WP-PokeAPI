@@ -97,6 +97,15 @@ add_action( 'customize_controls_enqueue_scripts', 'understrap_child_customize_co
 ##############################
 # FUNCTIONS FOR POKEMON SITE #
 ##############################
+// Disable sidebar
+function remove_sidebar() {
+	unregister_sidebar( 'right-sidebar' );
+	unregister_sidebar( 'left-sidebar' );
+	set_theme_mod( 'understrap_sidebar_position', 'none' );
+	set_theme_mod( 'understrap_sidebar_mobile_toggle', false );
+}
+add_action( 'widgets_init', 'remove_sidebar', 11 );
+
 /**
  * Enqueue build script
  */
